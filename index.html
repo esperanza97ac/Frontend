@@ -15,7 +15,7 @@
   <!-- NAVBAR -->
   <nav class="navbar" aria-label="Navegación principal">
     <div class="navbar__inner">
-      <a href="/" class="navbar__brand" aria-label="Inicio recetas">
+      <a href="./" class="navbar__brand" aria-label="Inicio recetas">
         <span class="navbar__logo">🍓</span>
         <span class="navbar__title">recetas</span>
       </a>
@@ -44,27 +44,19 @@
         <button type="button" id="search-clear" class="search-form__clear" aria-label="Borrar búsqueda" hidden>✕</button>
       </form>
 
-      <!-- Categorías (pills) -->
-      <div class="category-pills" id="category-pills" role="tablist" aria-label="Categorías">
-        <!-- Generado por JS -->
-      </div>
-
       <!-- Filtros -->
       <div class="filters">
         <label for="difficulty-filter" class="filters__label">Dificultad:</label>
         <select id="difficulty-filter" class="filters__select">
           <option value="all">Todas las dificultades</option>
           <option value="Fácil">Fácil</option>
-          <option value="Media">Media</option>
-          <option value="Avanzada">Avanzada</option>
+          <option value="Medio">Medio</option>
+          <option value="Avanzado">Avanzado</option>
         </select>
 
         <label for="category-filter" class="filters__label">Categoría:</label>
         <select id="category-filter" class="filters__select">
           <option value="all">Todas las categorías</option>
-          <option value="Entrantes">Entrantes</option>
-          <option value="Platos principales">Platos principales</option>
-          <option value="Postres">Postres</option>
         </select>
 
         <button type="button" id="filters-reset" class="btn btn--ghost" hidden>Restablecer</button>
@@ -106,6 +98,9 @@
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+  window.__API_URL__ = 'http://127.0.0.1:8000';
+  </script>
   <script src="js/api.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/render.js"></script>
