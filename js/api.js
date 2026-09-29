@@ -5,8 +5,8 @@
 
 const API_BASE_URL =
   window.__API_URL__ ||
-  (window.location.hostname === 'localhost'
-    ? 'http://localhost:8000'
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
     : window.location.origin);
 
 const apiClient = axios.create({
@@ -60,7 +60,7 @@ apiClient.interceptors.response.use(
    API: CATEGORÍAS
    -------------------------------------------------------------------------- */
 const categoriesApi = {
-  list: () => apiClient.get('/categories'),
+  list: () => apiClient.get('/categories/'),
   get:  (id) => apiClient.get(`/categories/${id}`),
 };
 
@@ -76,24 +76,13 @@ const recipesApi = {
    * @param {string} [params.category]   filtro categoría
    * @param {string} [params.difficulty] filtro dificultad
    */
-  list: (params = {}) => apiClient.get('/recipes', { params }),
+  list: (params = {}) => apiClient.get('/recipes/', { params }),
+  search:     (q, params = {}) => apiClient.get('/recipes/search/', { params: { ...params, q } }),
+  byCategory: (id, params = {}) => apiClient.get(`/recipes/category/${id}`, { params }),
   get:  (id)        => apiClient.get(`/recipes/${id}`),
-  create: (payload) => apiClient.post('/recipes', payload),
-  update: (id, payload) => apiClient.patch(`/recipes/${id}`, payload), // PATCH, no PUT
+  create: (payload) => apiClient.post('/recipes/', payload),
+  update: (id, payload) => apiClient.patch(`/recipes/${id}`, payload), 
   remove: (id)      => apiClient.delete(`/recipes/${id}`),
-};
-
-/* --------------------------------------------------------------------------
-   API: INGREDIENTES (relación 1:M de receta)
-   -------------------------------------------------------------------------- */
-const ingredientsApi = {
-  listByRecipe: (recipeId) => apiClient.get(`/recipes/${recipeId}/ingredients`),
-  create:       (recipeId, payload) =>
-    apiClient.post(`/recipes/${recipeId}/ingredients`, payload),
-  update:       (ingredientId, payload) =>
-    apiClient.patch(`/ingredients/${ingredientId}`, payload),
-  remove:       (ingredientId) =>
-    apiClient.delete(`/ingredients/${ingredientId}`),
 };
 
 /* --------------------------------------------------------------------------
@@ -104,5 +93,4 @@ window.API = {
   baseURL: API_BASE_URL,
   categories: categoriesApi,
   recipes: recipesApi,
-  ingredients: ingredientsApi,
 };

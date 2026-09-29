@@ -4,7 +4,7 @@
 const {
   el,
   showToast, showLoader, hideLoader,
-  renderCategories, renderRecipes,
+  renderRecipes,
   renderEmptyState, hideEmptyState,
   renderPagination,
   openModal, closeModal, buildDialogShell,
@@ -73,6 +73,17 @@ function bindEvents() {
     loadRecipes();
   });
 
+  const categorySelect = document.getElementById('category-filter');
+  categorySelect?.addEventListener('change', (e) => {
+    const value = e.target.value;
+    if (value === 'all') {
+      selectCategory('Todas', null);
+    } else {
+      const found = state.categories.find((c) => String(c.id) === String(value));
+      selectCategory(found?.name ?? 'Todas', found?.id ?? null);
+    }
+  });
+
   document.getElementById('filters-reset')
     ?.addEventListener('click', resetFilters);
 
@@ -95,9 +106,31 @@ async function loadCategories() {
   try {
     const res = await API.categories.list();
     state.categories = Array.isArray(res) ? res : (res.items ?? []);
-    renderCategories(state.categories, state.category, selectCategory);
+    syncCategorySelect();
   } catch (err) {
     showToast(err.message, 'error', 'Categorías');
+  }
+}
+
+function syncCategorySelect() {
+  const categorySelect = document.getElementById('category-filter');
+  if (!categorySelect) return;
+  const current = categorySelect.value;
+  categorySelect.replaceChildren();
+  const allOpt = document.createElement('option');
+  allOpt.value = 'all';
+  allOpt.textContent = 'Todas las categorías';
+  categorySelect.appendChild(allOpt);
+  state.categories.forEach((c) => {
+    const opt = document.createElement('option');
+    opt.value = String(c.id);
+    opt.textContent = c.name;
+    categorySelect.appendChild(opt);
+  });
+  if ([...categorySelect.options].some((o) => o.value === String(current))) {
+    categorySelect.value = String(current);
+  } else if (state.categoryId != null) {
+    categorySelect.value = String(state.categoryId);
   }
 }
 
@@ -168,7 +201,10 @@ function selectCategory(name, id) {
   state.category = name;
   state.categoryId = id;
   state.page = 1;
-  renderCategories(state.categories, name, selectCategory);
+  const categorySelect = document.getElementById('category-filter');
+  if (categorySelect) {
+    categorySelect.value = id == null ? 'all' : String(id);
+  }
   toggleResetVisibility();
   loadRecipes();
 }
@@ -186,8 +222,9 @@ function resetFilters() {
   if (sc) sc.hidden = true;
   const d = document.getElementById('difficulty-filter');
   if (d) d.value = 'all';
+  const cf = document.getElementById('category-filter');
+  if (cf) cf.value = 'all';
 
   toggleResetVisibility();
-  renderCategories(state.categories, 'Todas', selectCategory);
   loadRecipes();
 }

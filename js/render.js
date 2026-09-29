@@ -3,27 +3,20 @@
 
   const dom = {
     grid: document.getElementById('recipes-grid'),
-    pills: document.getElementById('category-pills'),
   };
 
-  /* ---------- CATEGORÍAS (pills) ---------- */
-  function renderCategories(categories, active, onChange) {
-    if (!dom.pills) return;
-    dom.pills.replaceChildren();
-    const names = ['Todas', ...categories.map((c) => c.name ?? c)];
-    names.forEach((name) => {
-      const btn = el('button', {
-        type: 'button',
-        role: 'tab',
-        class: 'pill' + (name === active ? ' is-active' : ''),
-        'aria-selected': name === active,
-        onclick: () => onChange(name),
-      }, name);
-      dom.pills.appendChild(btn);
-    });
+  /* ---------- RECETAS (grid de tarjetas) ---------- */
+  function countIngredients(ingredients) {
+    if (!ingredients) return 0;
+    const lines = String(ingredients).split('\n').map((s) => s.trim()).filter(Boolean);
+    return lines.length > 1 ? lines.length : String(ingredients).split(',').map((s) => s.trim()).filter(Boolean).length || 0;
   }
 
-  /* ---------- RECETAS (grid de tarjetas) ---------- */
+  function shortText(text, max = 120) {
+    const t = String(text || '').replace(/\s+/g, ' ').trim();
+    return t.length > max ? `${t.slice(0, max)}…` : t;
+  }
+
   function renderRecipes(recipes, onSelect) {
     if (!dom.grid) return;
     dom.grid.replaceChildren();
@@ -46,10 +39,10 @@
           el('div', { class: 'recipe-card__meta' }, [
             el('span', { class: 'accent' }, r.difficulty || '—'),
             el('span', {}, '·'),
-            el('span', {}, `${(r.ingredients?.length ?? 0)} ingredientes`),
+            el('span', {}, `${countIngredients(r.ingredients)} ingredientes`),
           ]),
           el('h3', { class: 'recipe-card__title' }, r.title),
-          el('p', { class: 'recipe-card__desc' }, r.description || ''),
+          el('p', { class: 'recipe-card__desc' }, shortText(r.instructions)),
           el('div', { class: 'recipe-card__footer' }, [
             el('span', {}, r.category?.name ?? r.category ?? ''),
             el('span', { class: 'link' }, 'Ver receta →'),
@@ -60,5 +53,5 @@
     });
   }
 
-  window.Render = { renderCategories, renderRecipes };
+window.UI = Object.assign(window.UI || {}, { renderRecipes });
 })();

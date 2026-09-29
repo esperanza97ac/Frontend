@@ -18,7 +18,7 @@ function renderDetailModal(r) {
   const close = () => closeModal(dialogs.detail);
 
   const body = el('div', {}, [
-    el('p', { class: 'detail-desc' }, r.description || ''),
+    el('p', { class: 'detail-desc' }, `Dificultad: ${r.difficulty || '—'} · Categoría: ${r.category?.name || '—'}`),
     el('h3', {}, 'Ingredientes'),
     el('p', { class: 'detail-desc', style: 'white-space: pre-line' }, r.ingredients || ''),
     el('h3', {}, 'Instrucciones'),
@@ -75,16 +75,19 @@ function openRecipeForm(recipe) {
     })
   );
 
-  const diffInput = el('input', {
-    type: 'number', min: '1', max: '20', required: 'true',
-    value: recipe?.difficulty ?? 1,
-  });
+  const diffInput = el('select', { required: 'true' },
+    ['Fácil', 'Medio', 'Avanzado'].map((d) => {
+      const opt = el('option', { value: d }, d);
+      if ((recipe?.difficulty ?? 'Fácil') === d) opt.selected = true;
+      return opt;
+    })
+  );
 
   const body = el('div', { class: 'recipe-form' }, [
     el('div', { class: 'form-field' }, [el('label', {}, 'Título *'), titleInput]),
     el('div', { class: 'form-row' }, [
       el('div', { class: 'form-field' }, [el('label', {}, 'Categoría *'), catSelect]),
-      el('div', { class: 'form-field' }, [el('label', {}, 'Dificultad (1-20) *'), diffInput]),
+      el('div', { class: 'form-field' }, [el('label', {}, 'Dificultad *'), diffInput]),
     ]),
     el('div', { class: 'form-field' }, [el('label', {}, 'Ingredientes *'), ingredientsInput]),
     el('div', { class: 'form-field' }, [el('label', {}, 'Instrucciones *'), instructionsInput]),
@@ -116,7 +119,7 @@ async function submitRecipeForm({
   const title = titleInput.value.trim();
   const ingredients = ingredientsInput.value.trim();
   const instructions = instructionsInput.value.trim();
-  const difficulty = Number(diffInput.value);
+  const difficulty = diffInput.value.trim();
   const category_id = Number(catSelect.value);
 
   if (title.length < 1 || title.length > 100) {
@@ -131,8 +134,8 @@ async function submitRecipeForm({
     showToast('Las instrucciones no pueden estar vacías.', 'error', 'Validación');
     return;
   }
-  if (!Number.isInteger(difficulty) || difficulty < 1 || difficulty > 20) {
-    showToast('La dificultad debe estar entre 1 y 20.', 'error', 'Validación');
+  if (difficulty.length < 1 || difficulty.length > 20) {
+    showToast('La dificultad no puede estar vacía (máx. 20 caracteres).', 'error', 'Validación');
     return;
   }
   if (!Number.isInteger(category_id) || category_id < 1) {
