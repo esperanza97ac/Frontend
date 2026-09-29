@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recetas · FastAPI</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" aria-label="Navegación principal">
+    <div class="navbar__inner">
+      <a href="/" class="navbar__brand" aria-label="Inicio recetas">
+        <span class="navbar__logo">🍓</span>
+        <span class="navbar__title">recetas</span>
+      </a>
+      <button type="button" id="btn-new-recipe" class="btn btn--primary">
+        + Nueva Receta
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO / FILTROS -->
+  <section class="hero" aria-label="Búsqueda y filtros">
+    <div class="hero__content">
+      <h1 class="hero__heading">Tus recetas dulces y saladas en un recetario cálido.</h1>
+      <p class="hero__subheading">Consulta ingredientes, anota tus recetas y disfruta cocinando.</p>
+
+      <!-- Búsqueda -->
+      <form class="search-form" role="search" onsubmit="return false;">
+        <label for="search-input" class="sr-only">Buscar receta o ingrediente</label>
+        <input
+          type="search"
+          id="search-input"
+          class="search-form__input"
+          placeholder="Buscar receta o ingrediente..."
+          autocomplete="off"
+        />
+        <button type="button" id="search-clear" class="search-form__clear" aria-label="Borrar búsqueda" hidden>✕</button>
+      </form>
+
+      <!-- Categorías (pills) -->
+      <div class="category-pills" id="category-pills" role="tablist" aria-label="Categorías">
+        <!-- Generado por JS -->
+      </div>
+
+      <!-- Filtros -->
+      <div class="filters">
+        <label for="difficulty-filter" class="filters__label">Dificultad:</label>
+        <select id="difficulty-filter" class="filters__select">
+          <option value="all">Todas las dificultades</option>
+          <option value="Fácil">Fácil</option>
+          <option value="Media">Media</option>
+          <option value="Avanzada">Avanzada</option>
+        </select>
+
+        <label for="category-filter" class="filters__label">Categoría:</label>
+        <select id="category-filter" class="filters__select">
+          <option value="all">Todas las categorías</option>
+          <option value="Entrantes">Entrantes</option>
+          <option value="Platos principales">Platos principales</option>
+          <option value="Postres">Postres</option>
+        </select>
+
+        <button type="button" id="filters-reset" class="btn btn--ghost" hidden>Restablecer</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+    <div class="content-header">
+      <h2 id="recipes-title">Todas las recetas</h2>
+      <span id="recipes-count" class="content-header__count">(0)</span>
+    </div>
+
+    <div id="skeleton-container" class="skeleton-grid" hidden></div>
+    <div id="recipes-grid" class="recipes-grid" role="list"></div>
+    <div id="empty-state" class="empty-state" hidden></div>
+    <div id="pagination" class="pagination" hidden></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span class="footer__brand">YUMMY YUMMY!</span>
+    </div>
+  </footer>
+
+  <!-- MODALES -->
+  <dialog id="recipe-detail-dialog" class="dialog" aria-labelledby="detail-title"></dialog>
+
+  <dialog id="recipe-form-dialog" class="dialog" aria-labelledby="form-title">
+    <form id="recipe-form" class="recipe-form" method="dialog"></form>
+  </dialog>
+
+  <dialog id="delete-confirm-dialog" class="dialog" aria-labelledby="delete-title"></dialog>
+
+  <!-- TOASTS -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/modals.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
