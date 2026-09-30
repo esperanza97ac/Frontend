@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recetas · FastAPI</title>
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="css/styles.css">  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -28,8 +26,7 @@
   <!-- HERO / FILTROS -->
   <section class="hero" aria-label="Búsqueda y filtros">
     <div class="hero__content">
-      <h1 class="hero__heading">Tus recetas dulces y saladas en un recetario cálido.</h1>
-      <p class="hero__subheading">Consulta ingredientes, anota tus recetas y disfruta cocinando.</p>
+      <h1 class="hero__heading">Tus recetas dulces y saladas</h1>
 
       <!-- Búsqueda -->
       <form class="search-form" role="search" onsubmit="return false;">
@@ -64,7 +61,7 @@
     </div>
   </section>
 
-  <!-- CONTENIDO PRINCIPAL -->
+
   <main class="main-content">
     <div class="content-header">
       <h2 id="recipes-title">Todas las recetas</h2>
@@ -77,7 +74,7 @@
     <div id="pagination" class="pagination" hidden></div>
   </main>
 
-  <!-- FOOTER -->
+
   <footer class="footer">
     <div class="footer__inner">
       <span class="footer__brand">YUMMY YUMMY!</span>
@@ -93,11 +90,19 @@
 
   <dialog id="delete-confirm-dialog" class="dialog" aria-labelledby="delete-title"></dialog>
 
-  <!-- TOASTS -->
+
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- SCRIPTS -->
+
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+  if (!window.axios) {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('recipes-grid').innerHTML =
+        '<p style="padding:2rem;text-align:center">No se pudo cargar axios desde el CDN. Revisa tu conexión a internet y recarga.</p>';
+    });
+  }
+  </script>
   <script>
   window.__API_URL__ = 'http://127.0.0.1:8000';
   </script>
